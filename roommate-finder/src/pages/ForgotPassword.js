@@ -54,7 +54,7 @@ const ForgotPassword = () => {
                 className="btn signin"
                 onClick={() => navigate("/signin")}
               >
-                Sing In
+                Sign In
               </button>
             </div>
           </form>
