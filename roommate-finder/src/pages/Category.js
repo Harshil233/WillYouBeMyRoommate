@@ -49,7 +49,7 @@ const Category = () => {
         setLoading(false);
       } catch (error) {
         console.log(error);
-        toast.error("Unble to fetch data");
+        toast.error("Unable to fetch data");
       }
     };
     //func call
@@ -84,21 +84,21 @@ const Category = () => {
       setLoading(false);
     } catch (error) {
       console.log(error);
-      toast.error("Unble to fetch data");
+      toast.error("Unable to fetch data");
     }
   };
 
   return (
     <Layout
       title={
-        params.categoryName === "rent" ? "Places For Rent" : "Plces For Sale"
+        params.categoryName === "rent" ? "Find Apartment" : "Find Roommate"
       }
     >
       <div className="mt-3 container-fluid">
         <h1>
           {params.categoryName === "rent"
-            ? "Places For Rent"
-            : "Plces For Sale"}
+            ? "Find Apartment"
+            : "Find Roommate"}
         </h1>
         {loading ? (
           <Spinner />
@@ -120,7 +120,7 @@ const Category = () => {
             className="btn btn-primary text-center"
             onClick={fetchLoadMoreListing}
           >
-            load more
+            Load more
           </button>
         )}
       </div>
