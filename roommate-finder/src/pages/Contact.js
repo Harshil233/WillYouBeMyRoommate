@@ -1,131 +1,79 @@
-import React, { useEffect, useState } from "react";
-import Layout from "./../components/Layout/Layout";
-import { useParams } from "react-router-dom";
-import { db } from "./../firebase.config";
+import React, { useState, useEffect } from "react";
+import Layout from "../components/Layout/Layout";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase.config";
+import { useParams, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
-import {
-  collection,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  startAfter,
-} from "firebase/firestore";
-import Spinner from "../components/Spinner";
-import ListingItem from "../components/ListingItem";
+import "../styles/contact.css";
 
-const Category = () => {
-  const [listing, setListing] = useState("");
-  const [lastFetchListing, setLastFetchListing] = useState(null);
-  const [loading, setLoading] = useState(true);
+const Contact = () => {
+  const [message, setMessage] = useState("");
+  const [landlord, setLandlord] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams(); //eslint-disable-line
   const params = useParams();
 
-  //fetch listing
   useEffect(() => {
-    const fetchListing = async () => {
-      try {
-        //refrence
-        const listingsRef = collection(db, "listings");
-        //query
-        const q = query(
-          listingsRef,
-          where("type", "==", params.categoryName),
-          orderBy("timestamp", "desc"),
-          limit(1)
-        );
-        //execute query
-        const querySnap = await getDocs(q);
-        const lastVisible = querySnap.docs[querySnap.docs.length - 1];
-        setLastFetchListing(lastVisible);
-        const listings = [];
-        querySnap.forEach((doc) => {
-          return listings.push({
-            id: doc.id,
-            data: doc.data(),
-          });
-        });
-        setListing(listings);
-        setLoading(false);
-      } catch (error) {
-        console.log(error);
-        toast.error("Unable to fetch data");
+    const getLandlord = async () => {
+      const docRef = doc(db, "users", params.landlordId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setLandlord(docSnap.data());
+      } else {
+        toast.error("Unble to ftech data");
       }
     };
-    //func call
-    fetchListing();
-  }, [params.categoryName]);
-
-  //loadmore pagination func
-  const fetchLoadMoreListing = async () => {
-    try {
-      //refrence
-      const listingsRef = collection(db, "listings");
-      //query
-      const q = query(
-        listingsRef,
-        where("type", "==", params.categoryName),
-        orderBy("timestamp", "desc"),
-        startAfter(lastFetchListing),
-        limit(10)
-      );
-      //execute query
-      const querySnap = await getDocs(q);
-      const lastVisible = querySnap.docs[querySnap.docs.length - 1];
-      setLastFetchListing(lastVisible);
-      const listings = [];
-      querySnap.forEach((doc) => {
-        return listings.push({
-          id: doc.id,
-          data: doc.data(),
-        });
-      });
-      setListing((prevState) => [...prevState, ...listings]);
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error("Unable to fetch data");
-    }
-  };
-
+    getLandlord();
+  }, [params.landlordId]);
   return (
-    <Layout
-      title={
-        params.categoryName === "rent" ? "Find Apartment" : "Find Roommate"
-      }
-    >
-      <div className="mt-3 container-fluid">
-        <h1>
-          {params.categoryName === "rent"
-            ? "Find Apartment"
-            : "Find Roommate"}
-        </h1>
-        {loading ? (
-          <Spinner />
-        ) : listing && listing.length > 0 ? (
-          <>
-            <div>
-              {listing.map((list) => (
-                <ListingItem listing={list.data} id={list.id} key={list.id} />
-              ))}
-            </div>
-          </>
-        ) : (
-          <p>No Listing For {params.categoryName} </p>
-        )}
-      </div>
-      <div className="d-flex align-items-center justify-content-center mb-4 mt-4">
-        {lastFetchListing && (
-          <button
-            className="btn btn-primary text-center"
-            onClick={fetchLoadMoreListing}
-          >
-            Load more
-          </button>
-        )}
+    <Layout title="contact details - house marketplace">
+      <div className="row contact-container">
+        <div className="col-md-6 contact-container-col-1">
+          <img src="/assets/contact.svg" alt="contact" />
+        </div>
+        <div className="col-md-6 contact-container-col-2">
+          <h1>Contact Details</h1>
+          <div>
+            {landlord !== "" && (
+              <main>
+                <h3 className="mb-4">
+                  Person Name :{" "}
+                  <span style={{ color: "#470d21" }}>
+                    {" "}
+                    " {landlord?.name} "{" "}
+                  </span>
+                </h3>
+
+                <div className="form-floating">
+                  <textarea
+                    className="form-control"
+                    placeholder="Leave a comment here"
+                    value={message}
+                    id="message"
+                    onChange={(e) => {
+                      setMessage(e.target.value);
+                    }}
+                  />
+                  <label
+                    htmlFor="floatingTextarea"
+                    style={{ color: "lightgray" }}
+                  >
+                    type your message here
+                  </label>
+                </div>
+                <a
+                  href={`mailto:${landlord.email}?Subject=${searchParams.get(
+                    "listingName"
+                  )}&body=${message}`}
+                >
+                  <button className="btn mt-2">Send Message</button>
+                </a>
+              </main>
+            )}
+          </div>
+        </div>
       </div>
     </Layout>
   );
 };
 
-export default Category;
+export default Contact;
