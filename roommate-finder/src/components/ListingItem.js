@@ -15,26 +15,32 @@ const ListingItem = ({ listing, id, onDelete, onEdit }) => {
               </div>
               <div className="col-md-5 item-card-continer2">
                 <h2>{listing.name}</h2>
-                <p>{listing.location}</p>
+                <p>{listing.address}</p>
+                <p>Latitude: {listing.latitude}</p>
+                <p>Longitude: {listing.longitude}</p>
+            
+                {listing.type==="rent" &&
                 <p>
                   <GiTakeMyMoney /> $ :{" "}
                   {listing.offer
-                    ? listing.discountedPrice
+                    ? listing.offerPrice
                     : listing.regularPrice}{" "}
                   {listing.type === "rent" && " / Month"}
-                </p>
+                </p>}
+                
                 <p>
                   <FaBed /> &nbsp;
                   {listing.bedrooms > 1
                     ? `${listing.bedrooms} Bedrooms`
-                    : "1 Bedreoom"}
+                    : "1 Bedroom"}
                 </p>
+                {listing.type==="rent" &&
                 <p>
                   <FaBath /> &nbsp;
                   {listing.bathrooms > 1
                     ? `${listing.bathrooms} Bathrooms`
                     : "1 Bathroom"}
-                </p>
+                </p>}
               </div>
             </div>
           </Link>
