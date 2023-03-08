@@ -26,8 +26,8 @@ Getting Started
 To get started with this application, follow the steps below:
 
 Clone the repository to your local machine.
-Install the dependencies using npm install.
-Rename .env.sample to .env and update the environment variables with your Firebase configuration.
+First install the node modules using "npm install node_modules" and then install all the other required dependencies using npm install.
+Complete Firebase configuration.
 Run the application using npm start.
 Contributing
 Contributions are welcome! If you find any bugs or issues with the application, feel free to open an issue or submit a pull request.
