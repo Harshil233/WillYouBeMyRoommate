@@ -37,7 +37,7 @@ const EditListing = () => {
     address: "",
     offer: false,
     regularPrice: 0,
-    discountedPrice: 0,
+    offerPrice: 0,
     images: {},
     latitude: 0,
     longitude: 0,
@@ -54,7 +54,7 @@ const EditListing = () => {
     address,
     offer,
     regularPrice,
-    discountedPrice,
+    offerPrice,
     images,
     latitude,
     longitude,
@@ -137,7 +137,7 @@ const EditListing = () => {
     setLoading(true);
     e.preventDefault();
     // console.log(formData);
-    if (discountedPrice >= regularPrice) {
+    if (offerPrice > regularPrice) {
       setLoading(false);
       toast.error("Discount Price should be less than Regular Price");
       return;
@@ -157,7 +157,7 @@ const EditListing = () => {
     } else {
       geoLocation.lat = latitude;
       geoLocation.lng = longitude;
-      // location = address;
+      location = address;
     }
 
     //store images to firebase storage
@@ -213,7 +213,7 @@ const EditListing = () => {
     };
     formData.location = address;
     delete formDataCopy.images;
-    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    !formDataCopy.offer && delete formDataCopy.offerPrice;
     const docRef = doc(db, "listings", params.listingId);
     await updateDoc(docRef, formDataCopy);
     toast.success("Listing updated!!");
@@ -255,7 +255,7 @@ const EditListing = () => {
                 id="type"
               />
               <label className="form-check-label" htmlFor="sale">
-                Sale
+                Roommate
               </label>
             </div>
           </div>
@@ -288,6 +288,7 @@ const EditListing = () => {
             />
           </div>
           {/* bathrroms */}
+          {type === "rent" &&
           <div className="mb-3 mt-4">
             <label htmlFor="bathrooms" className="form-label">
               Bathrooms
@@ -298,9 +299,9 @@ const EditListing = () => {
               id="bathrooms"
               value={bathrooms}
               onChange={onChangeHandler}
-              required
+              // required
             />
-          </div>
+          </div>}
           {/* parking */}
           <div className="mb-3 ">
             <label htmlFor="parking" className="form-label">
@@ -337,6 +338,7 @@ const EditListing = () => {
             </div>
           </div>
           {/* furnished */}
+          {type === "rent" &&
           <div className="mb-3 ">
             <label htmlFor="furnished" className="form-label">
               Furnished :
@@ -370,7 +372,7 @@ const EditListing = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div>}
           {/* address */}
           <div className="mb-3">
             <label htmlFor="address">Address :</label>
@@ -417,6 +419,7 @@ const EditListing = () => {
             </div>
           )}
           {/* offers  */}
+          {type === "rent" &&
           <div className="mb-3 ">
             <label htmlFor="offer" className="form-label">
               Offer :
@@ -450,8 +453,9 @@ const EditListing = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div>}
           {/* regular price */}
+          {type === "rent" &&
           <div className="mb-3 mt-4">
             <label htmlFor="name" className="form-label">
               Regular Price :
@@ -464,12 +468,13 @@ const EditListing = () => {
                 name="regularPrice"
                 value={regularPrice}
                 onChange={onChangeHandler}
-                required
+                // required
               />
               {type === "rent" && <p className="ms-4 mt-2">$ / Month</p>}
             </div>
-          </div>
+          </div>}
           {/* offer */}
+          
           {offer && (
             <div className="mb-3 mt-4">
               <label htmlFor="discountedPrice" className="form-label">
@@ -481,9 +486,9 @@ const EditListing = () => {
                 className="form-control w-50 "
                 id="discountedPrice"
                 name="discountedPrice"
-                value={discountedPrice}
+                value={offerPrice}
                 onChange={onChangeHandler}
-                required
+                // required
               />
             </div>
           )}
