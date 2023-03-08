@@ -28,7 +28,7 @@ const CreateListing = () => {
     address: "",
     offer: false,
     regularPrice: 0,
-    discountedPrice: 0,
+    offerPrice: 0,
     images: {},
     latitude: 0,
     longitude: 0,
@@ -44,7 +44,7 @@ const CreateListing = () => {
     address,
     offer,
     regularPrice,
-    discountedPrice,
+    offerPrice,
     images,
     latitude,
     longitude,
@@ -102,7 +102,7 @@ const CreateListing = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     // console.log(formData);
-    if (discountedPrice >= regularPrice) {
+    if (offerPrice > regularPrice) {
       setLoading(false);
       toast.error("Discount Price should be less than Regular Price");
       return;
@@ -111,6 +111,18 @@ const CreateListing = () => {
       setLoading(false);
       toast.error("Max 6 Images can be selected");
       return;
+    }
+    let geoLocation = {};
+    let location; // eslint-disable-line
+    if (geoLoactionEnable) {
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyCcdggkOmLBbc0uo93LdD7VCv2npMpUy8Y`
+      );
+      const data = await response.json(); // eslint-disable-line
+    } else {
+      geoLocation.lat = latitude;
+      geoLocation.lng = longitude;
+      location = address;
     }
 
     //store images to firebase storage
@@ -161,10 +173,10 @@ const CreateListing = () => {
       imgUrls,
       timestamp: serverTimestamp(),
     };
-    // formData.location = address;
+    formData.location = address;
     delete formDataCopy.images;
-    delete formDataCopy.address;
-    !formDataCopy.offer && delete formDataCopy.discountedPrice;
+    // delete formDataCopy.address;
+    !formDataCopy.offer && delete formDataCopy.offerPrice;
     const docRef = await addDoc(collection(db, "listings"), formDataCopy);
     setLoading(false);
     toast.success("Listing Created!");
@@ -204,7 +216,7 @@ const CreateListing = () => {
                 id="type"
               />
               <label className="form-check-label" htmlFor="sale">
-                Sale
+                  Roommate
               </label>
             </div>
           </div>
@@ -223,6 +235,7 @@ const CreateListing = () => {
             />
           </div>
           {/* bedrooms */}
+     
           <div className="mb-3 mt-4">
             <label htmlFor="bedrooms" className="form-label">
               Bedrooms
@@ -236,7 +249,8 @@ const CreateListing = () => {
               required
             />
           </div>
-          {/* bathrroms */}
+          {/* bathrooms */}
+          {type==="rent" &&
           <div className="mb-3 mt-4">
             <label htmlFor="bathrooms" className="form-label">
               Bathrooms
@@ -247,9 +261,9 @@ const CreateListing = () => {
               id="bathrooms"
               value={bathrooms}
               onChange={onChangeHandler}
-              required
+              // required
             />
-          </div>
+          </div>}
           {/* parking */}
           <div className="mb-3 ">
             <label htmlFor="parking" className="form-label">
@@ -286,6 +300,7 @@ const CreateListing = () => {
             </div>
           </div>
           {/* furnished */}
+          {type==="rent" &&
           <div className="mb-3 ">
             <label htmlFor="furnished" className="form-label">
               Furnished :
@@ -319,7 +334,7 @@ const CreateListing = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div>}
           {/* address */}
           <div className="mb-3">
             <label htmlFor="address">Address :</label>
@@ -366,6 +381,7 @@ const CreateListing = () => {
             </div>
           )}
           {/* offers  */}
+          {type==="rent" &&
           <div className="mb-3 ">
             <label htmlFor="offer" className="form-label">
               Offer :
@@ -399,8 +415,9 @@ const CreateListing = () => {
                 </label>
               </div>
             </div>
-          </div>
+          </div>}
           {/* regular price */}
+          {type==="rent" &&
           <div className="mb-3 mt-4">
             <label htmlFor="name" className="form-label">
               Regular Price :
@@ -413,12 +430,14 @@ const CreateListing = () => {
                 name="regularPrice"
                 value={regularPrice}
                 onChange={onChangeHandler}
-                required
+                // required
               />
-              {type === "rent" && <p className="ms-4 mt-2">Rs / Month</p>}
+              {type === "rent" && <p className="ms-4 mt-2">$ / Month</p>}
             </div>
           </div>
+          }
           {/* offer */}
+          
           {offer && (
             <div className="mb-3 mt-4">
               <label htmlFor="discountedPrice" className="form-label">
@@ -430,9 +449,9 @@ const CreateListing = () => {
                 className="form-control w-50 "
                 id="discountedPrice"
                 name="discountedPrice"
-                value={discountedPrice}
+                value={offerPrice}
                 onChange={onChangeHandler}
-                required
+                // required
               />
             </div>
           )}
@@ -457,7 +476,7 @@ const CreateListing = () => {
           {/* submit button */}
           <div className="mb-3">
             <input
-              disabled={!name || !address || !regularPrice || !images}
+              disabled={!name || !address || !images}
               className="btn btn-primary w-100"
               type="submit"
               value="Create Listing"
