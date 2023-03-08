@@ -14,6 +14,7 @@ import {
 } from "firebase/firestore";
 import Spinner from "../components/Spinner";
 import ListingItem from "../components/ListingItem";
+import "../styles/category.css";
 
 const Category = () => {
   const [listing, setListing] = useState("");
@@ -32,7 +33,7 @@ const Category = () => {
           listingsRef,
           where("type", "==", params.categoryName),
           orderBy("timestamp", "desc"),
-          limit(1)
+          limit(2)
         );
         //execute query
         const querySnap = await getDocs(q);
@@ -117,7 +118,7 @@ const Category = () => {
       <div className="d-flex align-items-center justify-content-center mb-4 mt-4">
         {lastFetchListing && (
           <button
-            className="btn btn-primary text-center"
+            className="load-btn btn-primary text-center"
             onClick={fetchLoadMoreListing}
           >
             Load more
