@@ -147,18 +147,7 @@ const EditListing = () => {
       toast.error("Max 6 Images can be selected");
       return;
     }
-    let geoLocation = {};
-    let location; // eslint-disable-line
-    if (geoLoactionEnable) {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=AIzaSyCcdggkOmLBbc0uo93LdD7VCv2npMpUy8Y`
-      );
-      const data = await response.json(); // eslint-disable-line
-    } else {
-      geoLocation.lat = latitude;
-      geoLocation.lng = longitude;
-      location = address;
-    }
+    
 
     //store images to firebase storage
     const storeImage = async (image) => {
@@ -208,7 +197,6 @@ const EditListing = () => {
     const formDataCopy = {
       ...formData,
       imgUrls,
-      geoLocation,
       timestamp: serverTimestamp(),
     };
     formData.location = address;
