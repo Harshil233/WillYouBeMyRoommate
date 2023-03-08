@@ -24,9 +24,9 @@ SwipeCore.use([EffectCoverflow, Pagination]);
 const Listing = () => {
   const [listing, setListing] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate(); //eslint-disable-line
+  const navigate = useNavigate(); 
   const params = useParams();
-  const auth = getAuth(); //eslint-disable-line
+  const auth = getAuth(); 
 
   useEffect(() => {
     const fetchListing = async () => {
@@ -77,45 +77,59 @@ const Listing = () => {
         </div>
         <div className="col-md-4 listing-container-col2">
           <h3>{listing.name}</h3>
+          <p>{listing.address}</p>
+          {listing.type==="rent" &&
           <h6>
-            Price :{" "}
+            Price :{" "} 
             {listing.offer ? listing.offerPrice : listing.regularPrice} /
             $
-          </h6>
-          <p>Property For : {listing.type === "rent" ? "Rent" : "Sale"}</p>
+          </h6>}
+          {listing.type==="rent" &&
+          <p>Property For : {listing.type === "rent" ? "Rent" : "Sale"}</p>}
+          {listing.type==="rent" &&
           <p>
             {listing.offer && (
               <span>
-                {listing.regularPrice - listing.offerPrice} Discount
+                {listing.regularPrice - listing.offerPrice} Discount 
               </span>
             )}
-          </p>
+          </p>}
           <p>
             <FaBed size={20} /> &nbsp;
             {listing.bedrooms > 1
               ? `${listing.bedrooms} Bedrooms`
               : "1 Bedroom"}
           </p>
+          {listing.type==="rent" &&
           <p>
             <FaBath size={20} /> &nbsp;
             {listing.bathrooms > 1
               ? `${listing.bathrooms} bathrooms`
               : "1 Bathroom"}
-          </p>
+          </p>}
           <p>
             <FaParking size={20} /> &nbsp;
             {listing.parking ? `Parking spot` : "no spot for parking"}
           </p>
+          {listing.type==="rent" &&
           <p>
             <FaHouseDamage size={20} /> &nbsp;
             {listing.furnished ? `furnished house` : "not furnished"}
-          </p>
+          </p>}
+          {listing.type==="rent" &&
           <Link
             className="btn btn-success"
             to={`/contact/${listing.useRef}?listingName=${listing.name}`}
           >
             Contact Landlord <FaArrowCircleRight size={20} />
-          </Link>
+          </Link>}
+          {listing.type==="sale" &&
+          <Link
+            className="btn btn-success"
+            to={`/contact/${listing.useRef}?listingName=${listing.name}`}
+          >
+            Contact Roommate <FaArrowCircleRight size={20} />
+          </Link>}
         </div>
       </div>
     </Layout>
