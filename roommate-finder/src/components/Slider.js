@@ -22,6 +22,7 @@ SwipeCore.use([EffectCoverflow, Pagination]);
 
 const Slider = () => {
   const [listings, setListings] = useState(null);
+  
   const [loading, setLoading] = useState(true);
   const navigat = useNavigate();
   const userPic =
@@ -88,9 +89,14 @@ const Slider = () => {
                   <ImLocation2 size={20} className="ms-2" /> Recently Added :{" "}
                   <br />
                   <span className="ms-4 mt-2"> {data.name}</span>
+                  {data.type==="rent" &&
                   <span className="ms-2">
                     | Price ( $ {data.regularPrice} )
-                  </span>
+                  </span>}
+                  {data.type==="sale" &&
+                  <span className="ms-2">
+                    | Address ( {data.address} )
+                  </span>}
                 </h4>
               </SwiperSlide>
             ))}
