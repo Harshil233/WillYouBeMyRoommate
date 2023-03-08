@@ -19,7 +19,7 @@ const Contact = () => {
       if (docSnap.exists()) {
         setLandlord(docSnap.data());
       } else {
-        toast.error("Unble to ftech data");
+        toast.error("Unable to fetch data");
       }
     };
     getLandlord();
