@@ -170,8 +170,8 @@ const Profile = () => {
           </div>
           <div className="mt-3 create-listing">
             <Link to="/create-listing">
-              <FaArrowAltCircleRight color="primary" /> &nbsp; Sell or Rent Your
-              Home
+              <FaArrowAltCircleRight color="primary" /> &nbsp; Rent Your
+              Home or Find Roommate
             </Link>
           </div>
         </div>
